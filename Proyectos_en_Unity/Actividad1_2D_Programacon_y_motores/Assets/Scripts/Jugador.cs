@@ -20,23 +20,20 @@ public class Jugador : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Otra forma de controlar el movimiento del jugador es con Input.GetAxis("Horizontal") y Input.GetAxis("Vertical")
-        movimientoX = Input.GetAxis("Horizontal");
-        movimientoY = Input.GetAxis("Vertical");
-
         if(!tocaSuelo)
         {
             movimientoY = 0f;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && tocaSuelo)
+        if((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && tocaSuelo)
         {
             rb.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
             tocaSuelo = false;
         }
 
+        movimientoX = Input.GetAxis("Horizontal");
+
         rb.AddForce(new Vector2(movimientoX * velocidadX, 0));
-        rb.AddForce(new Vector2(0, movimientoY * velocidadY * 7));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
