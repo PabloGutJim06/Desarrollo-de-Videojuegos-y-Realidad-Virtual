@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    /*
     private void OnTriggerEnter2d(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Moneda")){
@@ -103,5 +103,5 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Detecto que estoy tocando el trigger");
         }
-    }
+    }*/
 }
