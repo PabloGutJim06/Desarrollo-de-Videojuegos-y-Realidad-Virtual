@@ -9,6 +9,8 @@ TagManager:
   - Moneda
   - Plataforma
   - Muerte
+  - Puerta
+  - Llave
   layers:
   - Default
   - TransparentFX

@@ -7,10 +7,20 @@ public class Jugador : MonoBehaviour
     [SerializeField] float velocidadY = 3.0f;
     [SerializeField] float movimientoX = 0f;
     [SerializeField] float movimientoY = 0f;
-    [SerializeField] Vector2 VolverTrasMuerte = new Vector2(2.3f, -8.77f);
+    [SerializeField] TextMeshProUGUI textoMonedas;
+    [SerializeField] ParticleSystem explosionFX;
+    [SerializeField] GameObject puerta;
+    [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
 
+    // Muerte
     bool muerto = false;
-    bool tocaSuelo = false; 
+    //Saltar
+    bool tocaSuelo = false;
+    //Monedas
+    bool tocaMoneda = false; 
+    int contadorMonedas = 0;
+    //Llave
+    bool tienellave = false;
     private Rigidbody2D rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,8 +39,10 @@ public class Jugador : MonoBehaviour
 
         if (muerto){
             Debug.Log("El Personaje ha muerto");
+            explosionFX.transform.position = transform.position;
+            explosionFX.Play();
             //transform.position = new Vector3(VolverTrasMuerte.x, VolverTrasMuerte.y, transform.position.z);
-            rb.transform.position = new Vector3(2.3f, -8.77f, 0f);
+            rb.transform.position = VolverTrasMuerte;
             muerto = false;
         }
 
@@ -57,5 +69,29 @@ public class Jugador : MonoBehaviour
             Debug.Log("He detectado un trigger de muerte");
             muerto = true;
         }
+        
+        if(collision.gameObject.tag == "Moneda")
+        {
+            Debug.Log("He detectado un trigger de moneda");
+            tocaMoneda = true;
+            Destroy(collision.gameObject);
+            contadorMonedas++;
+            textoMonedas.text = $"Monedas: {contadorMonedas}";
+            //textoMonedas.text = (int.Parse(textoMonedas.text) + 1).ToString();
+        }
+
+        if(collision.gameObject.tag == "Llave")
+        {
+            Debug.Log("Tengo la llave");
+            tienellave = true;
+            Destroy(collision.gameObject);
+            puerta.SetActive(false);
+        }
     }
+
+
+    /*
+    + Para cuando queramos pausar el juego completo: 
+    + Time.timeScale = 0f;
+    */
 }
