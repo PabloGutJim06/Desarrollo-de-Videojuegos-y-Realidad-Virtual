@@ -3,15 +3,20 @@ using UnityEngine;
 
 public class Jugador : MonoBehaviour
 {
+    #region Variables Serializadas
     [SerializeField] float velocidadX = 3.0f;
     [SerializeField] float velocidadY = 3.0f;
     [SerializeField] float movimientoX = 0f;
     [SerializeField] float movimientoY = 0f;
     [SerializeField] TextMeshProUGUI textoMonedas;
+    [SerializeField] TextMeshProUGUI textoVidas;
     [SerializeField] ParticleSystem explosionFX;
     [SerializeField] GameObject puerta;
     [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
 
+    #endregion
+
+    #region Variables Privadas
     // Muerte
     bool muerto = false;
     //Saltar
@@ -22,13 +27,19 @@ public class Jugador : MonoBehaviour
     //Llave
     bool tienellave = false;
     private Rigidbody2D rb;
+    private int vidasActuales = 5;
 
+    #endregion
+
+    #region Start
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); //Accede a x componente del objeto al que esta asociado el Script.
     }
+    #endregion
 
+    #region Update
     // Update is called once per frame
     void Update()
     {
@@ -55,7 +66,9 @@ public class Jugador : MonoBehaviour
 
         rb.AddForce(new Vector2(movimientoX * velocidadX, 0));
     }
+    #endregion
 
+    #region Metodos Colisiones
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Suelo")
@@ -68,6 +81,8 @@ public class Jugador : MonoBehaviour
         {
             Debug.Log("He detectado un trigger de muerte");
             muerto = true;
+            vidasActuales--;
+            textoVidas.text = $"Vidas: {vidasActuales}";
         }
         
         if(collision.gameObject.tag == "Moneda")
@@ -88,6 +103,8 @@ public class Jugador : MonoBehaviour
             puerta.SetActive(false);
         }
     }
+
+    #endregion
 
 
     /*
