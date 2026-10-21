@@ -84,6 +84,10 @@ public class Jugador : MonoBehaviour
             muerto = true;
             vidasActuales--;
             textoVidas.text = $"Vidas: {vidasActuales}";
+            if (vidasActuales <= 0)
+            {
+                SceneManager.LoadScene("GameOver");
+            }
         }
         
         if(collision.gameObject.tag == "Moneda")
