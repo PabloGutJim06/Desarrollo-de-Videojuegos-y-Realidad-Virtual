@@ -11,6 +11,10 @@ TagManager:
   - Muerte
   - Puerta
   - Llave
+  - FxTemporaire
+  - Victoria
+  - TVic
+  - Abismo
   layers:
   - Default
   - TransparentFX

@@ -11,8 +11,11 @@ public class Jugador : MonoBehaviour
     [SerializeField] float movimientoY = 0f;
     [SerializeField] TextMeshProUGUI textoMonedas;
     [SerializeField] TextMeshProUGUI textoVidas;
+    [SerializeField] TextMeshProUGUI textoMonedasTotales;
     [SerializeField] ParticleSystem explosionFX;
     [SerializeField] GameObject puerta;
+    [SerializeField] GameObject TextoVictoria;
+    [SerializeField] GameObject Abismo;
     [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
 
     #endregion
@@ -106,6 +109,26 @@ public class Jugador : MonoBehaviour
             tienellave = true;
             Destroy(collision.gameObject);
             puerta.SetActive(false);
+        }
+
+        if(collision.gameObject.tag == "Victoria")
+        {
+            TextoVictoria.SetActive(true);
+            textoMonedasTotales.text = $"Total Monedas: {contadorMonedas}";
+            Time.timeScale = 0f;
+        }
+
+        if(collision.gameObject.tag == "Abismo")
+        {
+            Abismo.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Abismo")
+        {
+            Abismo.SetActive(false);
         }
     }
 
