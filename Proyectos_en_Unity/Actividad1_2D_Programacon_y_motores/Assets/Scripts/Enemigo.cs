@@ -20,4 +20,18 @@ public class Enemigo : MonoBehaviour
         // (así la gravedad sigue funcionando).
         rb.linearVelocity = new Vector2(direccion * velocidad, rb.linearVelocity.y);
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Recorrido")
+        {
+            if(direccion == -1)
+            {
+                direccion = +1;
+            } else
+            {
+                direccion = -1;
+            }
+        }
+    }
 }

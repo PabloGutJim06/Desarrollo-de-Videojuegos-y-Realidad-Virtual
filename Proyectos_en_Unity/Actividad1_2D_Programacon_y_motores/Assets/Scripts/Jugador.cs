@@ -16,12 +16,14 @@ public class Jugador : MonoBehaviour
     [SerializeField] GameObject puerta;
     [SerializeField] GameObject TextoVictoria;
     [SerializeField] GameObject Abismo;
+    [SerializeField] GameObject Enemigo;
     [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
 
     #endregion
 
     #region Variables Privadas
     // Muerte
+    private int salud = 2;
     bool muerto = false;
     //Saltar
     bool tocaSuelo = false;
@@ -32,6 +34,8 @@ public class Jugador : MonoBehaviour
     bool tienellave = false;
     private Rigidbody2D rb;
     private int vidasActuales = 5;
+
+    //Colision
 
     #endregion
 
@@ -53,11 +57,13 @@ public class Jugador : MonoBehaviour
         }
 
         if (muerto){
-            Debug.Log("El Personaje ha muerto");
             explosionFX.transform.position = transform.position;
             explosionFX.Play();
             //transform.position = new Vector3(VolverTrasMuerte.x, VolverTrasMuerte.y, transform.position.z);
             rb.transform.position = VolverTrasMuerte;
+            rb.transform.rotation = Quaternion.Euler(0,0,0);
+            rb.angularVelocity = 0f;
+            rb.linearVelocity = Vector2.zero;
             muerto = false;
         }
 
@@ -73,29 +79,42 @@ public class Jugador : MonoBehaviour
     #endregion
 
     #region Metodos Colisiones
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemigo") // Solo nos interesa si lo que chocó es un enemigo.
+        {
+            // GetContact(0) = primer punto de contacto del choque.
+            // .normal = vector de longitud 1 que indica hacia dónde "mira" la superficie de choque.
+            Vector2 normal = collision.GetContact(0).normal;
+
+            // Si la normal es más horizontal que vertical, el choque fue por un lado.
+            // Mathf.Abs quita el signo (izquierda/derecha, arriba/abajo), así no importa de qué lado vengas.
+            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            {
+                DaniarPlayer(); // Choque lateral: pierdes vida.
+            } else
+            {
+                Destroy(collision.gameObject);
+            }
+            // Si no, fue vertical (pisaste al enemigo): no pasa nada.
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Suelo")
         {
-            Debug.Log("He detectado un trigger de suelo");
             tocaSuelo = true;
         }
 
         if(collision.gameObject.tag == "Muerte")
         {
-            Debug.Log("He detectado un trigger de muerte");
-            muerto = true;
-            vidasActuales--;
-            textoVidas.text = $"Vidas: {vidasActuales}";
-            if (vidasActuales <= 0)
-            {
-                SceneManager.LoadScene("GameOver");
-            }
+            morir();
         }
         
         if(collision.gameObject.tag == "Moneda")
         {
-            Debug.Log("He detectado un trigger de moneda");
             tocaMoneda = true;
             Destroy(collision.gameObject);
             contadorMonedas++;
@@ -105,7 +124,6 @@ public class Jugador : MonoBehaviour
 
         if(collision.gameObject.tag == "Llave")
         {
-            Debug.Log("Tengo la llave");
             tienellave = true;
             Destroy(collision.gameObject);
             puerta.SetActive(false);
@@ -131,6 +149,32 @@ public class Jugador : MonoBehaviour
             Abismo.SetActive(false);
         }
     }
+
+    #endregion
+
+    #region Otros Metodos
+    private void DaniarPlayer()
+    {
+        salud--;
+        Debug.Log("El jugador ha Perdido 1 de vida por el enemigo");
+        if(salud <= 0)
+        {
+            morir();
+            
+        }
+    }
+
+    private void morir()
+    {
+        muerto = true;
+        vidasActuales--;
+        textoVidas.text = $"Vidas: {vidasActuales}";
+        if (vidasActuales <= 0)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+
 
     #endregion
 
