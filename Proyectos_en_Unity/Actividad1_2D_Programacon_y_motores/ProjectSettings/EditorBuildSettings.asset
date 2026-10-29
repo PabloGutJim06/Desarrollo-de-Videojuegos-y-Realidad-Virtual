@@ -12,10 +12,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu_Juego.unity
     guid: 68d4b67f7209bef4c8d10c9029dc8c28
   - enabled: 1
-    path: Assets/Scenes/Ejercicio_1_Basico.unity
+    path: Assets/Scenes/Nivel1.unity
     guid: 17f2e8210037b214a8c7eb124d7ff2dd
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 3e2036e52735bc447ad001dd04bcf9bd
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: cc7fc7b09447a9042a666db240214384, type: 3}

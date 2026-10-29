@@ -18,22 +18,34 @@ public class Jugador : MonoBehaviour
     [SerializeField] GameObject Abismo;
     [SerializeField] GameObject Enemigo;
     [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
+    
 
     #endregion
 
     #region Variables Privadas
     // Muerte
     private int salud = 2;
+    private bool invulnerabilidad = false;
     bool muerto = false;
+
+    //Vidas
+    private int vidasActuales = 5;
+
     //Saltar
     bool tocaSuelo = false;
+    private int cantidadSaltosJugador = 2;
+    private float tiempoEntreSaltos = 0f;
+    private float delay = 0.3f; 
+
     //Monedas
     bool tocaMoneda = false; 
     int contadorMonedas = 0;
+
     //Llave
     bool tienellave = false;
     private Rigidbody2D rb;
-    private int vidasActuales = 5;
+    
+    
 
     //Colision
 
@@ -67,12 +79,16 @@ public class Jugador : MonoBehaviour
             muerto = false;
         }
 
-        if((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && tocaSuelo)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && cantidadSaltosJugador > 0 && tiempoEntreSaltos <= 0)
         {
-            rb.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
-            tocaSuelo = false;
+            saltar();
         }
         movimientoX = Input.GetAxis("Horizontal");
+        
+        if(tiempoEntreSaltos > 0)
+        {
+            tiempoEntreSaltos = tiempoEntreSaltos - Time.deltaTime;
+        }
 
         rb.AddForce(new Vector2(movimientoX * velocidadX, 0));
     }
@@ -106,6 +122,7 @@ public class Jugador : MonoBehaviour
         if(collision.gameObject.tag == "Suelo")
         {
             tocaSuelo = true;
+            cantidadSaltosJugador = 2;
         }
 
         if(collision.gameObject.tag == "Muerte")
@@ -153,6 +170,15 @@ public class Jugador : MonoBehaviour
     #endregion
 
     #region Otros Metodos
+
+    private void saltar()
+    {
+        tiempoEntreSaltos = delay;
+        rb.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
+        tocaSuelo = false;
+        cantidadSaltosJugador--;
+
+    }
     private void DaniarPlayer()
     {
         salud--;
