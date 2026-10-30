@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Jugador : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Jugador : MonoBehaviour
     [SerializeField] TextMeshProUGUI textoVidas;
     [SerializeField] TextMeshProUGUI textoMonedasTotales;
     [SerializeField] ParticleSystem explosionFX;
+    [SerializeField] Image[] corazones;
+    [SerializeField] Sprite corazonLleno;
+    [SerializeField] Sprite corazonVacio;
     [SerializeField] GameObject puerta;
     [SerializeField] GameObject TextoVictoria;
     [SerializeField] GameObject Abismo;
@@ -201,6 +205,13 @@ public class Jugador : MonoBehaviour
         }
     }
 
+    private void actualizarCorazones()
+    {
+        for (int i = 0; i < corazones.Length; i++)
+        {
+            
+        }
+    }
 
     #endregion
 
