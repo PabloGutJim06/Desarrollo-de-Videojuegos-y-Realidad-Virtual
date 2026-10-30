@@ -21,6 +21,7 @@ public class Jugador : MonoBehaviour
     [SerializeField] GameObject TextoVictoria;
     [SerializeField] GameObject Abismo;
     [SerializeField] GameObject Enemigo;
+    [SerializeField] AudioClip sonidoMoneda;
     [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
     
 
@@ -48,6 +49,7 @@ public class Jugador : MonoBehaviour
     //Llave
     bool tienellave = false;
     private Rigidbody2D rb;
+    private AudioSource aus;
     
     
 
@@ -60,6 +62,8 @@ public class Jugador : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); //Accede a x componente del objeto al que esta asociado el Script.
+        actualizarCorazones();
+        aus = GetComponent<AudioSource>();
     }
     #endregion
 
@@ -81,6 +85,8 @@ public class Jugador : MonoBehaviour
             rb.angularVelocity = 0f;
             rb.linearVelocity = Vector2.zero;
             muerto = false;
+            salud = 2;
+            actualizarCorazones();
         }
 
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && cantidadSaltosJugador > 0 && tiempoEntreSaltos <= 0)
@@ -137,6 +143,7 @@ public class Jugador : MonoBehaviour
         if(collision.gameObject.tag == "Moneda")
         {
             tocaMoneda = true;
+            aus.PlayOneShot(sonidoMoneda);
             Destroy(collision.gameObject);
             contadorMonedas++;
             textoMonedas.text = $"Monedas: {contadorMonedas}";
@@ -186,6 +193,7 @@ public class Jugador : MonoBehaviour
     private void DaniarPlayer()
     {
         salud--;
+        actualizarCorazones();
         Debug.Log("El jugador ha Perdido 1 de vida por el enemigo");
         if(salud <= 0)
         {
@@ -209,7 +217,14 @@ public class Jugador : MonoBehaviour
     {
         for (int i = 0; i < corazones.Length; i++)
         {
-            
+            if(i < salud)
+            {
+                corazones[i].sprite = corazonLleno;
+            }
+            else
+            {
+                corazones[i].sprite = corazonVacio;
+            }
         }
     }
 
