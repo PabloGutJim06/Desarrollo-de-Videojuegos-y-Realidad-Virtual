@@ -143,7 +143,6 @@ public class Jugador : MonoBehaviour
         if(collision.gameObject.tag == "Moneda")
         {
             tocaMoneda = true;
-            aus.PlayOneShot(sonidoMoneda);
             Destroy(collision.gameObject);
             contadorMonedas++;
             textoMonedas.text = $"Monedas: {contadorMonedas}";
