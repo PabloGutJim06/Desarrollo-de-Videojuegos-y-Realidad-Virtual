@@ -35,6 +35,9 @@ public class Jugador : MonoBehaviour
 
     //Vidas
     private int vidasActuales = 5;
+    private float tiempoInvulnerabilidad = 0f;
+    private float delayInvulnerabilidad = 1.5f;
+    private float temporizadorParpadeo = 0.1f;
 
     //Saltar
     bool tocaSuelo = false;
@@ -51,6 +54,8 @@ public class Jugador : MonoBehaviour
     private Rigidbody2D rb;
     private AudioSource aus;
     
+    private SpriteRenderer spriteRenderer;
+    
     
 
     //Colision
@@ -63,7 +68,8 @@ public class Jugador : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>(); //Accede a x componente del objeto al que esta asociado el Script.
         actualizarCorazones();
-        aus = GetComponent<AudioSource>();
+        aus = GetComponentInChildren<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     #endregion
 
@@ -87,6 +93,7 @@ public class Jugador : MonoBehaviour
             muerto = false;
             salud = 2;
             actualizarCorazones();
+            spriteRenderer.enabled = true;
         }
 
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && cantidadSaltosJugador > 0 && tiempoEntreSaltos <= 0)
@@ -98,6 +105,24 @@ public class Jugador : MonoBehaviour
         if(tiempoEntreSaltos > 0)
         {
             tiempoEntreSaltos = tiempoEntreSaltos - Time.deltaTime;
+        }
+
+        if (invulnerabilidad)
+        {
+            tiempoInvulnerabilidad = tiempoInvulnerabilidad - Time.deltaTime;
+            // Parpadeo del sprite del jugador mientras es invulnerable.
+            temporizadorParpadeo = temporizadorParpadeo - Time.deltaTime;
+            if (temporizadorParpadeo <= 0)
+            {
+                spriteRenderer.enabled = !spriteRenderer.enabled;
+                temporizadorParpadeo = 0.1f;
+            }
+
+            if(tiempoInvulnerabilidad <= 0)
+            {
+                invulnerabilidad = false;
+                spriteRenderer.enabled = true;
+            }
         }
 
         rb.AddForce(new Vector2(movimientoX * velocidadX, 0));
@@ -192,7 +217,14 @@ public class Jugador : MonoBehaviour
     }
     private void DaniarPlayer()
     {
+        if (invulnerabilidad)
+        {
+            return;
+        }
+
         salud--;
+        invulnerabilidad = true;
+        tiempoInvulnerabilidad = delayInvulnerabilidad;
         actualizarCorazones();
         Debug.Log("El jugador ha Perdido 1 de vida por el enemigo");
         if(salud <= 0)
