@@ -147,6 +147,7 @@ public class Jugador : MonoBehaviour
             Destroy(collision.gameObject);
             contadorMonedas++;
             textoMonedas.text = $"Monedas: {contadorMonedas}";
+            aus.PlayOneShot(sonidoMoneda);
             //textoMonedas.text = (int.Parse(textoMonedas.text) + 1).ToString();
         }
 
