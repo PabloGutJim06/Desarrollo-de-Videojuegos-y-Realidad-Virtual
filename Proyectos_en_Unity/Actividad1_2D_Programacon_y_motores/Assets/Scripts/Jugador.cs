@@ -23,6 +23,7 @@ public class Jugador : MonoBehaviour
     [SerializeField] GameObject Enemigo;
     [SerializeField] AudioClip sonidoMoneda;
     [SerializeField] Vector3 VolverTrasMuerte = new Vector3(0.37f, -8.77f, 0f);
+    [SerializeField] AudioSource audioSource;
     
 
     #endregion
@@ -167,11 +168,12 @@ public class Jugador : MonoBehaviour
         
         if(collision.gameObject.tag == "Moneda")
         {
+            aus.PlayOneShot(sonidoMoneda);
             tocaMoneda = true;
             Destroy(collision.gameObject);
             contadorMonedas++;
             textoMonedas.text = $"Monedas: {contadorMonedas}";
-            aus.PlayOneShot(sonidoMoneda);
+            
             //textoMonedas.text = (int.Parse(textoMonedas.text) + 1).ToString();
         }
 
@@ -187,6 +189,7 @@ public class Jugador : MonoBehaviour
             TextoVictoria.SetActive(true);
             textoMonedasTotales.text = $"Total Monedas: {contadorMonedas}";
             Time.timeScale = 0f;
+            audioSource.Pause();
         }
 
         if(collision.gameObject.tag == "Abismo")
